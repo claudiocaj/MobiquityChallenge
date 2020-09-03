@@ -3,6 +3,7 @@ package com.mobiquity.mobproducts.presentation.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.mobiquity.mobproducts.ProductsApplicaton
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
@@ -16,6 +17,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         (application as ProductsApplicaton).appComponent.inject(this)
-        Toast.makeText(this, viewModel.fetchProducts().toString(), Toast.LENGTH_SHORT).show()
     }
 }
