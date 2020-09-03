@@ -1,4 +1,10 @@
 package com.mobiquity.mobproducts.domain.entities
 
-class Price {
-}
+import com.google.gson.annotations.SerializedName
+
+data class Price(
+    @SerializedName("amount")
+    val amount: String,
+    @SerializedName("currency")
+    val currency: String
+)
