@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import com.google.android.material.tabs.TabLayout
 import com.mobiquity.mobproducts.ProductsApplicaton
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.domain.entities.Category
+import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.presentation.adapter.ProductItemAdapter
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
 import kotlinx.android.synthetic.main.fragment_products.*
@@ -43,6 +45,10 @@ class ProductsFragment : Fragment() {
                 handleCategories(categories)
             }
         })
+
+        viewModel.getChosenProduct().observe(viewLifecycleOwner, Observer {
+            Toast.makeText(requireContext(), it.name, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun bindProductList() {
@@ -62,6 +68,14 @@ class ProductsFragment : Fragment() {
         }
     }
 
+    private fun bindCategoryProductList(products: List<Product>) {
+        product_list.adapter = ProductItemAdapter(products).also {
+            it.itemClick.subscribe { product ->
+                viewModel.setChosenProduct(product)
+            }
+        }
+    }
+
     private fun handleCategories(categories: List<Category>) {
         for (category in categories) {
             categories_tab.addTab(categories_tab.newTab().apply {
@@ -71,9 +85,7 @@ class ProductsFragment : Fragment() {
 
         categories_tab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                product_list.adapter = ProductItemAdapter(
-                    categories[tab!!.position].products
-                )
+                bindCategoryProductList(categories[tab!!.position].products)
             }
 
             override fun onTabReselected(p0: TabLayout.Tab?) {
@@ -84,8 +96,6 @@ class ProductsFragment : Fragment() {
                 //do Nothing
             }
         })
-
-        product_list.adapter = ProductItemAdapter(categories[0].products)
-
+        bindCategoryProductList(categories[0].products)
     }
 }
