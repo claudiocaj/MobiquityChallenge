@@ -5,18 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.mobiquity.mobproducts.ProductsApplicaton
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.FragmentProductsBinding
-import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Category
 import com.mobiquity.mobproducts.domain.entities.Product
+import com.mobiquity.mobproducts.extensions.visible
 import com.mobiquity.mobproducts.presentation.adapter.ProductItemAdapter
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
 import javax.inject.Inject
@@ -38,33 +39,27 @@ class ProductsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as ProductsApplicaton).appComponent.inject(this)
-        bindProductList()
+        setUpProductList()
         subscribeUi()
         viewModel.fetchProducts()
     }
 
     private fun subscribeUi() {
-        viewModel.getProducts().observe(viewLifecycleOwner, Observer {
-            it.onSuccess { categories ->
-                handleCategories(categories)
-            }
-        })
-    }
+        with(viewModel) {
+            getProducts().observe(viewLifecycleOwner, Observer {
+                it.onSuccess { categories ->
+                    handleCategories(categories)
+                }
 
-    private fun bindProductList() {
-        binding.productList.apply {
-            layoutManager = LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.VERTICAL,
-                false
-            )
+                it.onFailure {
+                    Snackbar.make(binding.root, getString(R.string.error), Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            })
+            isLoadingMutable.observe(viewLifecycleOwner, Observer {
+                toggleLoadingProgress(it)
+            })
 
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    LinearLayoutManager.VERTICAL
-                )
-            )
         }
     }
 
@@ -92,6 +87,23 @@ class ProductsFragment : Fragment() {
         bindCategoryProductList(categories[0].products)
     }
 
+    private fun setUpProductList() {
+        binding.productList.apply {
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    LinearLayoutManager.VERTICAL
+                )
+            )
+        }
+    }
+
     private fun bindCategoryProductList(products: List<Product>) {
         binding.productList.adapter = ProductItemAdapter(products).also {
             it.itemClick.subscribe { product ->
@@ -99,6 +111,10 @@ class ProductsFragment : Fragment() {
                 goToProductsDetail(product)
             }
         }
+    }
+
+    private fun toggleLoadingProgress(isLoading: Boolean) {
+        binding.progressLoading.visible(isLoading)
     }
 
     private fun goToProductsDetail(product: Product) {
