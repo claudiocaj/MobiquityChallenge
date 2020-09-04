@@ -7,8 +7,10 @@ import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.domain.usecase.ProductsUseCase
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ProductsViewModel(private val useCase: ProductsUseCase) : BaseViewModel() {
+class ProductsViewModel @Inject constructor(private val useCase: ProductsUseCase) :
+    BaseViewModel() {
     private val productsLiveData = MutableLiveData<Result<List<Category>>>()
     private val chosenProductLiveData = MutableLiveData<Product>()
 

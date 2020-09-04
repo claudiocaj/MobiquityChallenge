@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
@@ -45,10 +47,6 @@ class ProductsFragment : Fragment() {
                 handleCategories(categories)
             }
         })
-
-        viewModel.getChosenProduct().observe(viewLifecycleOwner, Observer {
-            Toast.makeText(requireContext(), it.name, Toast.LENGTH_SHORT).show()
-        })
     }
 
     private fun bindProductList() {
@@ -65,14 +63,6 @@ class ProductsFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
-        }
-    }
-
-    private fun bindCategoryProductList(products: List<Product>) {
-        product_list.adapter = ProductItemAdapter(products).also {
-            it.itemClick.subscribe { product ->
-                viewModel.setChosenProduct(product)
-            }
         }
     }
 
@@ -97,5 +87,20 @@ class ProductsFragment : Fragment() {
             }
         })
         bindCategoryProductList(categories[0].products)
+    }
+
+    private fun bindCategoryProductList(products: List<Product>) {
+        product_list.adapter = ProductItemAdapter(products).also {
+            it.itemClick.subscribe { product ->
+                viewModel.setChosenProduct(product)
+                goToProductsDetail(product)
+
+            }
+        }
+    }
+
+    private fun goToProductsDetail(product: Product) {
+        val action = ProductsFragmentDirections.actionProductsFragmentToDetailFragment(product)
+        findNavController().navigate(action)
     }
 }
