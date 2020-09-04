@@ -27,14 +27,20 @@ class ProductsViewModel @Inject constructor(private val useCase: ProductsUseCase
     }
 
     fun fetchProducts() {
-        compositeDisposable.add(useCase.getProducts()
-            .subscribeOn(
-                Schedulers.io()
-            ).observeOn(
-                AndroidSchedulers.mainThread()
-            ).subscribe {
-                productsLiveData.value = Result.success(it)
-            })
+        compositeDisposable.add(
+            useCase.getProducts()
+                .subscribeOn(
+                    Schedulers.io()
+                ).observeOn(
+                    AndroidSchedulers.mainThread()
+                ).subscribe({
+                    productsLiveData.value = Result.success(it)
+                    setIsLoading(false)
+                }, {
+                    productsLiveData.value = Result.failure(it)
+                    setIsLoading(false)
+                })
+        )
     }
 
 }
