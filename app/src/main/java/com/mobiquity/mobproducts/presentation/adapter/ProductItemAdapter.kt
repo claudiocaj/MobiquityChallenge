@@ -1,12 +1,9 @@
 package com.mobiquity.mobproducts.presentation.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mobiquity.mobproducts.BuildConfig
@@ -14,12 +11,13 @@ import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Product
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.item_product.view.*
 
 class ProductItemAdapter(private val products: List<Product>) :
     RecyclerView.Adapter<ProductItemAdapter.ViewHolder>() {
 
     val itemClick: PublishSubject<Product> = PublishSubject.create<Product>()
+    val transitionClickItem: PublishSubject<ItemProductBinding> =
+        PublishSubject.create<ItemProductBinding>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductBinding.inflate(
@@ -46,6 +44,7 @@ class ProductItemAdapter(private val products: List<Product>) :
 
         holder.binding.root.setOnClickListener {
             itemClick.onNext(product)
+            transitionClickItem.onNext(holder.binding)
         }
     }
 
