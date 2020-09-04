@@ -1,18 +1,19 @@
 package com.mobiquity.mobproducts.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.mobiquity.mobproducts.ProductsApplicaton
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.FragmentProductsBinding
 import com.mobiquity.mobproducts.domain.entities.Category
@@ -20,13 +21,21 @@ import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.extensions.visible
 import com.mobiquity.mobproducts.presentation.adapter.ProductItemAdapter
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class ProductsFragment : Fragment() {
-    @Inject
-    lateinit var viewModel: ProductsViewModel
 
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+
+    lateinit var viewModel: ProductsViewModel
     private lateinit var binding: FragmentProductsBinding
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +47,11 @@ class ProductsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        (requireActivity().application as ProductsApplicaton).appComponent.inject(this)
+
+        viewModel = ViewModelProviders
+            .of(requireActivity(), factory)
+            .get(ProductsViewModel::class.java)
+
         setUpProductList()
         subscribeUi()
         viewModel.fetchProducts()
@@ -65,6 +78,9 @@ class ProductsFragment : Fragment() {
 
     private fun handleCategories(categories: List<Category>) {
         val tabs = binding.categoriesTab
+
+        tabs.removeAllTabs()
+
         for (category in categories) {
             tabs.addTab(tabs.newTab().apply {
                 text = category.name
@@ -108,7 +124,7 @@ class ProductsFragment : Fragment() {
         binding.productList.adapter = ProductItemAdapter(products).also {
             it.itemClick.subscribe { product ->
                 viewModel.setChosenProduct(product)
-                goToProductsDetail(product)
+                goToProductsDetail()
             }
         }
     }
@@ -117,11 +133,11 @@ class ProductsFragment : Fragment() {
         binding.progressLoading.visible(isLoading)
     }
 
-    private fun goToProductsDetail(product: Product) {
+    private fun goToProductsDetail() {
         /* val extras = FragmentNavigatorExtras(
              binding.productImg to "product transition"
          )*/
-        val action = ProductsFragmentDirections.actionProductsFragmentToDetailFragment(product)
+        val action = ProductsFragmentDirections.actionProductsFragmentToDetailFragment()
         findNavController().navigate(action)
     }
 }

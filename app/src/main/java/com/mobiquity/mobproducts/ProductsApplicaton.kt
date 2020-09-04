@@ -1,19 +1,28 @@
 package com.mobiquity.mobproducts
 
+import android.app.Activity
 import android.app.Application
-import com.mobiquity.mobproducts.di.AppComponent
-import com.mobiquity.mobproducts.di.AppModule
+import androidx.fragment.app.Fragment
 import com.mobiquity.mobproducts.di.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
+import dagger.android.support.HasSupportFragmentInjector
+import javax.inject.Inject
 
-class ProductsApplicaton : Application() {
+class ProductsApplicaton : Application(), HasActivityInjector, HasSupportFragmentInjector {
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
 
-    lateinit var appComponent: AppComponent
+    @Inject
+    lateinit var dispatchingFragmentInjector: DispatchingAndroidInjector<Fragment>
 
-    private fun initDagger(): AppComponent =
-        DaggerAppComponent.builder().appModule(AppModule(this)).build()
+    override fun activityInjector(): AndroidInjector<Activity> = dispatchingActivityInjector
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingFragmentInjector
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = initDagger()
+        DaggerAppComponent.builder().build().inject(this)
     }
 }

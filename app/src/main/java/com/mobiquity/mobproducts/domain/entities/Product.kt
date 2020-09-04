@@ -1,10 +1,7 @@
 package com.mobiquity.mobproducts.domain.entities
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
 data class Product(
     @SerializedName("id")
     val id: String,
@@ -14,4 +11,4 @@ data class Product(
     val imageUrl: String,
     @SerializedName("salePrice")
     val saleDescription: Price
-) : Parcelable
+)
