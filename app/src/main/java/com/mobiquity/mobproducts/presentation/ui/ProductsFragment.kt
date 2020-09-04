@@ -14,23 +14,26 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.mobiquity.mobproducts.ProductsApplicaton
 import com.mobiquity.mobproducts.R
+import com.mobiquity.mobproducts.databinding.FragmentProductsBinding
 import com.mobiquity.mobproducts.domain.entities.Category
 import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.presentation.adapter.ProductItemAdapter
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
 import kotlinx.android.synthetic.main.fragment_products.*
-import java.util.*
 import javax.inject.Inject
 
 class ProductsFragment : Fragment() {
     @Inject
     lateinit var viewModel: ProductsViewModel
 
+    private lateinit var binding: FragmentProductsBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_products, container, false)
+        binding = FragmentProductsBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -50,7 +53,7 @@ class ProductsFragment : Fragment() {
     }
 
     private fun bindProductList() {
-        product_list.apply {
+        binding.productList.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.VERTICAL,
@@ -67,13 +70,14 @@ class ProductsFragment : Fragment() {
     }
 
     private fun handleCategories(categories: List<Category>) {
+        val tabs = binding.categoriesTab
         for (category in categories) {
-            categories_tab.addTab(categories_tab.newTab().apply {
+            tabs.addTab(tabs.newTab().apply {
                 text = category.name
             })
         }
 
-        categories_tab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 bindCategoryProductList(categories[tab!!.position].products)
             }
@@ -90,7 +94,7 @@ class ProductsFragment : Fragment() {
     }
 
     private fun bindCategoryProductList(products: List<Product>) {
-        product_list.adapter = ProductItemAdapter(products).also {
+        binding.productList.adapter = ProductItemAdapter(products).also {
             it.itemClick.subscribe { product ->
                 viewModel.setChosenProduct(product)
                 goToProductsDetail(product)

@@ -5,34 +5,32 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.lifecycle.Observer
 import com.mobiquity.mobproducts.ProductsApplicaton
 import com.mobiquity.mobproducts.R
-import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
-import javax.inject.Inject
+import com.mobiquity.mobproducts.databinding.FragmentDetailBinding
+import com.mobiquity.mobproducts.databinding.FragmentProductsBinding
+import com.mobiquity.mobproducts.domain.entities.Product
 
 class DetailFragment : Fragment() {
-
-    @Inject
-    lateinit var viewModel: ProductsViewModel
+    private lateinit var binding: FragmentDetailBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        binding = FragmentDetailBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity().application as ProductsApplicaton).appComponent.inject(this)
-        subscribeUi()
+        getProductData()
     }
 
-    private fun subscribeUi() {
-        viewModel.getChosenProduct().observe(viewLifecycleOwner, Observer {
-            Toast.makeText(requireContext(), it.name, Toast.LENGTH_SHORT).show()
-        })
+    private fun getProductData() {
+        val product: Product? = arguments?.let {
+            DetailFragmentArgs.fromBundle(it).product
+        }
     }
 }
