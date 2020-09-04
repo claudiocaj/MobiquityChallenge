@@ -6,13 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.ProductsFragment">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/categories_tab"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabGravity="center" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/categories_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabGravity="center" />
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/product_list"
@@ -20,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categories_tab" />
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
 
     <ProgressBar
         android:id="@+id/progress_loading"

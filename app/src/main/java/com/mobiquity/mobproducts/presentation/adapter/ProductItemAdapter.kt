@@ -38,8 +38,8 @@ class ProductItemAdapter(private val products: List<Product>) :
 
         Glide.with(holder.context)
             .load(BuildConfig.API_URL + product.imageUrl.subSequence(1, product.imageUrl.length))
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_foreground)
+            .placeholder(R.drawable.ic_loading)
+            .error(R.drawable.ic_no_photo)
             .into(holder.binding.productImg)
 
         holder.binding.root.setOnClickListener {

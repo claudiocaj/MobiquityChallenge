@@ -21,7 +21,7 @@ import javax.inject.Inject
 class DetailFragment : Fragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
-    
+
     lateinit var viewModel: ProductsViewModel
     private lateinit var binding: FragmentDetailBinding
 
@@ -61,8 +61,9 @@ class DetailFragment : Fragment() {
                     1,
                     product.imageUrl.length
                 )
-            ).placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_foreground).into(binding.productImg)
+            ).placeholder(R.drawable.ic_loading)
+            .error(R.drawable.ic_no_photo)
+            .into(binding.productImg)
     }
 
 }

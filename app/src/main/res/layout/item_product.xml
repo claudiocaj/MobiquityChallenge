@@ -7,8 +7,9 @@
 
     <ImageView
         android:id="@+id/product_img"
-        android:layout_width="@dimen/product_thumbnail_img_width"
-        android:layout_height="@dimen/product_thumbnail_img_height"
+        android:layout_width="@dimen/product_thumbnail_size"
+        android:layout_height="@dimen/product_thumbnail_size"
+        android:layout_marginStart="@dimen/medium_margin"
         android:transitionName="@string/product_transition"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,8 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/medium_margin"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_medium"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:transitionName="@string/product_name_transition"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/product_img"
