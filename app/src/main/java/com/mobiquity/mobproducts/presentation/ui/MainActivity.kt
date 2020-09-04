@@ -6,7 +6,9 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.mobiquity.mobproducts.ProductsApplicaton
 import com.mobiquity.mobproducts.R
+import com.mobiquity.mobproducts.presentation.viewmodel.BaseViewModel
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
+import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {

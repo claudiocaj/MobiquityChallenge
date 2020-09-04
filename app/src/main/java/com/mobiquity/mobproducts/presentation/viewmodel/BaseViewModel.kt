@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 abstract class BaseViewModel : ViewModel() {
     protected val compositeDisposable = CompositeDisposable()
     val isLoadingMutable = MutableLiveData<Boolean>()
+    val test = "opa"
 
     override fun onCleared() {
         super.onCleared()

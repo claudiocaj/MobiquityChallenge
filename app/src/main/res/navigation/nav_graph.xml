@@ -19,11 +19,5 @@
         android:id="@+id/detailFragment"
         android:name="com.mobiquity.mobproducts.presentation.ui.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail">
-
-        <argument
-            android:name="product"
-            app:argType="com.mobiquity.mobproducts.domain.entities.Product" />
-
-    </fragment>
+        tools:layout="@layout/fragment_detail"/>
 </navigation>
