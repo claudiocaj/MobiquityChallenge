@@ -3,6 +3,7 @@ package com.mobiquity.mobproducts.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mobiquity.mobproducts.BuildConfig
+import com.mobiquity.mobproducts.data.ProductsService
 import dagger.Module
 import dagger.Provides
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
@@ -14,6 +15,11 @@ import javax.inject.Singleton
 
 @Module
 class NetworkModule {
+
+    @Provides
+    fun provideProductsService(retrofit: Retrofit): ProductsService {
+        return retrofit.create(ProductsService::class.java)
+    }
 
     @Provides
     @Singleton

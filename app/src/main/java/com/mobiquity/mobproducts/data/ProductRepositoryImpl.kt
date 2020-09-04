@@ -4,12 +4,12 @@ import com.mobiquity.mobproducts.BuildConfig
 import com.mobiquity.mobproducts.domain.ProductsRepository
 import com.mobiquity.mobproducts.domain.entities.Category
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.Retrofit
+import javax.inject.Inject
 
-class ProductRepositoryImpl(val retrofit: Retrofit) : ProductsRepository {
+class ProductRepositoryImpl @Inject constructor(private val service: ProductsService) :
+    ProductsRepository {
 
     override fun getProducts(): Observable<List<Category>> {
-        val productsService = retrofit.create(ProductsService::class.java)
-        return productsService.getProducts(BuildConfig.API_URL)
+        return service.getProducts(BuildConfig.API_URL)
     }
 }
