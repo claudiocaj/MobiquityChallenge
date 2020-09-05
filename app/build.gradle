@@ -67,6 +67,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kaptAndroidTest "com.google.dagger:dagger-android-processor:$daggerVersion"
     androidTestImplementation "androidx.test:rules:1.2.0"
+    testImplementation 'android.arch.core:core-testing:1.1.1'
 
     //Retrofit and gson
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -85,11 +86,12 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    //circular image view
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    //MockK
+    testImplementation "io.mockk:mockk:1.9.3"
+    androidTestImplementation "io.mockk:mockk-android:1.9.3"
 
 }
