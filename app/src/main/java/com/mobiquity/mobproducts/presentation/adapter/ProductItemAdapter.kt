@@ -10,14 +10,10 @@ import com.mobiquity.mobproducts.BuildConfig
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Product
-import io.reactivex.subjects.PublishSubject
 
-class ProductItemAdapter(private val products: List<Product>) :
+class ProductItemAdapter(val onItemClick: (product: Product, binding: ItemProductBinding) -> Unit) :
     RecyclerView.Adapter<ProductItemAdapter.ViewHolder>() {
-
-    val itemClick: PublishSubject<Product> = PublishSubject.create<Product>()
-    val transitionClickItem: PublishSubject<ItemProductBinding> =
-        PublishSubject.create<ItemProductBinding>()
+    var products = mutableListOf<Product>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductBinding.inflate(
@@ -29,6 +25,16 @@ class ProductItemAdapter(private val products: List<Product>) :
 
     override fun getItemCount(): Int {
         return products.size
+    }
+
+    fun setProductsItems(products: List<Product>) {
+        this.products.apply {
+            clear()
+            addAll(products)
+        }.run {
+            notifyDataSetChanged()
+        }
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -43,8 +49,7 @@ class ProductItemAdapter(private val products: List<Product>) :
             .into(holder.binding.productImg)
 
         holder.binding.root.setOnClickListener {
-            itemClick.onNext(product)
-            transitionClickItem.onNext(holder.binding)
+            onItemClick.invoke(product, holder.binding)
         }
     }
 

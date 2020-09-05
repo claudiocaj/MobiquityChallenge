@@ -31,6 +31,7 @@ class ProductsFragment : Fragment() {
 
     lateinit var viewModel: ProductsViewModel
     private lateinit var binding: FragmentProductsBinding
+    private lateinit var productAdapter: ProductItemAdapter
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -61,7 +62,7 @@ class ProductsFragment : Fragment() {
         with(viewModel) {
             getProducts().observe(viewLifecycleOwner, Observer {
                 it.onSuccess { categories ->
-                    handleCategories(categories)
+                    bindCategoriesTabs(categories)
                 }
 
                 it.onFailure {
@@ -69,6 +70,7 @@ class ProductsFragment : Fragment() {
                         .show()
                 }
             })
+
             isLoadingMutable.observe(viewLifecycleOwner, Observer {
                 toggleLoadingProgress(it)
             })
@@ -76,7 +78,7 @@ class ProductsFragment : Fragment() {
         }
     }
 
-    private fun handleCategories(categories: List<Category>) {
+    private fun bindCategoriesTabs(categories: List<Category>) {
         val tabs = binding.categoriesTab
 
         tabs.removeAllTabs()
@@ -104,6 +106,11 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setUpProductList() {
+        productAdapter = ProductItemAdapter { product, binding ->
+            viewModel.setChosenProduct(product)
+            goToProductsDetail()
+        }
+
         binding.productList.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -117,16 +124,14 @@ class ProductsFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
+
+            adapter = productAdapter
         }
     }
 
+
     private fun bindCategoryProductList(products: List<Product>) {
-        binding.productList.adapter = ProductItemAdapter(products).also {
-            it.itemClick.subscribe { product ->
-                viewModel.setChosenProduct(product)
-                goToProductsDetail()
-            }
-        }
+        productAdapter.setProductsItems(products)
     }
 
     private fun toggleLoadingProgress(isLoading: Boolean) {
