@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.mobiquity.mobproducts.presentation.ui.ProductsFragment"
-        android:label="fragment_products"
+        android:label="@string/products_label"
         tools:layout="@layout/fragment_products">
         <action
             android:id="@+id/action_productsFragment_to_detailFragment"
@@ -18,6 +18,6 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.mobiquity.mobproducts.presentation.ui.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail"/>
+        android:label="@string/product_detail_label"
+        tools:layout="@layout/fragment_detail" />
 </navigation>
