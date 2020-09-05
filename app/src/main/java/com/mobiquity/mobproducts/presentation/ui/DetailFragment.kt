@@ -10,11 +10,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
-import com.mobiquity.mobproducts.*
 import com.mobiquity.mobproducts.databinding.FragmentDetailBinding
 import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.extensions.currencyFormat
+import com.mobiquity.mobproducts.extensions.getImageRequestFormat
+import com.mobiquity.mobproducts.extensions.loadWithoutPlaceHolder
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -68,18 +68,9 @@ class DetailFragment : Fragment() {
 
         binding.productImg.apply {
             transitionName = product.imageUrl
-
-            Glide.with(requireContext())
-                .load(
-                    BuildConfig.API_URL + product.imageUrl.subSequence(
-                        1,
-                        product.imageUrl.length
-                    )
-                )
-                .error(R.drawable.ic_no_photo)
-                .into(this)
-
-        }
+        }.loadWithoutPlaceHolder(
+            product.imageUrl.getImageRequestFormat()
+        )
     }
 
 }

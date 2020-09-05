@@ -10,6 +10,8 @@ import com.mobiquity.mobproducts.BuildConfig
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Product
+import com.mobiquity.mobproducts.extensions.getImageRequestFormat
+import com.mobiquity.mobproducts.extensions.load
 
 class ProductItemAdapter(val onItemClick: (product: Product, binding: ItemProductBinding) -> Unit) :
     RecyclerView.Adapter<ProductItemAdapter.ViewHolder>() {
@@ -42,11 +44,9 @@ class ProductItemAdapter(val onItemClick: (product: Product, binding: ItemProduc
 
         holder.binding.productName.text = product.name
 
-        Glide.with(holder.context)
-            .load(BuildConfig.API_URL + product.imageUrl.subSequence(1, product.imageUrl.length))
-            .placeholder(R.drawable.ic_loading)
-            .error(R.drawable.ic_no_photo)
-            .into(holder.binding.productImg)
+        holder.binding.productImg.load(
+            product.imageUrl.getImageRequestFormat()
+        )
 
         holder.binding.root.setOnClickListener {
             onItemClick.invoke(product, holder.binding)
@@ -55,6 +55,5 @@ class ProductItemAdapter(val onItemClick: (product: Product, binding: ItemProduc
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemProductBinding.bind(view)
-        val context: Context = view.context
     }
 }
