@@ -10,14 +10,12 @@ import com.mobiquity.mobproducts.BuildConfig
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Product
-import io.reactivex.subjects.PublishSubject
+import com.mobiquity.mobproducts.extensions.getImageRequestFormat
+import com.mobiquity.mobproducts.extensions.load
 
-class ProductItemAdapter(private val products: List<Product>) :
+class ProductItemAdapter(val onItemClick: (product: Product, binding: ItemProductBinding) -> Unit) :
     RecyclerView.Adapter<ProductItemAdapter.ViewHolder>() {
-
-    val itemClick: PublishSubject<Product> = PublishSubject.create<Product>()
-    val transitionClickItem: PublishSubject<ItemProductBinding> =
-        PublishSubject.create<ItemProductBinding>()
+    var products = mutableListOf<Product>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductBinding.inflate(
@@ -31,25 +29,31 @@ class ProductItemAdapter(private val products: List<Product>) :
         return products.size
     }
 
+    fun setProductsItems(products: List<Product>) {
+        this.products.apply {
+            clear()
+            addAll(products)
+        }.run {
+            notifyDataSetChanged()
+        }
+
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = products[position]
 
         holder.binding.productName.text = product.name
 
-        Glide.with(holder.context)
-            .load(BuildConfig.API_URL + product.imageUrl.subSequence(1, product.imageUrl.length))
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_foreground)
-            .into(holder.binding.productImg)
+        holder.binding.productImg.load(
+            product.imageUrl.getImageRequestFormat()
+        )
 
         holder.binding.root.setOnClickListener {
-            itemClick.onNext(product)
-            transitionClickItem.onNext(holder.binding)
+            onItemClick.invoke(product, holder.binding)
         }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = ItemProductBinding.bind(view)
-        val context: Context = view.context
     }
 }

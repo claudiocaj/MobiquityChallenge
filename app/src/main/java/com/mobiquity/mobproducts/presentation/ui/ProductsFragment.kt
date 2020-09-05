@@ -2,6 +2,7 @@ package com.mobiquity.mobproducts.presentation.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionInflater
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.FragmentProductsBinding
+import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Category
 import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.extensions.visible
@@ -31,10 +34,17 @@ class ProductsFragment : Fragment() {
 
     lateinit var viewModel: ProductsViewModel
     private lateinit var binding: FragmentProductsBinding
+    private lateinit var productAdapter: ProductItemAdapter
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
@@ -61,7 +71,7 @@ class ProductsFragment : Fragment() {
         with(viewModel) {
             getProducts().observe(viewLifecycleOwner, Observer {
                 it.onSuccess { categories ->
-                    handleCategories(categories)
+                    bindCategoriesTabs(categories)
                 }
 
                 it.onFailure {
@@ -69,6 +79,7 @@ class ProductsFragment : Fragment() {
                         .show()
                 }
             })
+
             isLoadingMutable.observe(viewLifecycleOwner, Observer {
                 toggleLoadingProgress(it)
             })
@@ -76,7 +87,7 @@ class ProductsFragment : Fragment() {
         }
     }
 
-    private fun handleCategories(categories: List<Category>) {
+    private fun bindCategoriesTabs(categories: List<Category>) {
         val tabs = binding.categoriesTab
 
         tabs.removeAllTabs()
@@ -104,6 +115,10 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setUpProductList() {
+        productAdapter = ProductItemAdapter { product, transitionViews ->
+            goToProductsDetail(product, transitionViews)
+        }
+
         binding.productList.apply {
             layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -117,27 +132,34 @@ class ProductsFragment : Fragment() {
                     LinearLayoutManager.VERTICAL
                 )
             )
+
+            adapter = productAdapter
         }
     }
 
+
     private fun bindCategoryProductList(products: List<Product>) {
-        binding.productList.adapter = ProductItemAdapter(products).also {
-            it.itemClick.subscribe { product ->
-                viewModel.setChosenProduct(product)
-                goToProductsDetail()
-            }
-        }
+        productAdapter.setProductsItems(products)
     }
 
     private fun toggleLoadingProgress(isLoading: Boolean) {
         binding.progressLoading.visible(isLoading)
     }
 
-    private fun goToProductsDetail() {
-        /* val extras = FragmentNavigatorExtras(
-             binding.productImg to "product transition"
-         )*/
+    private fun goToProductsDetail(product: Product, views: ItemProductBinding) {
+        viewModel.setChosenProduct(product)
+
+        views.productImg.transitionName = product.imageUrl
+        views.productName.transitionName = product.name
+
+        val extras = FragmentNavigatorExtras(
+            *arrayOf(
+                views.productImg to product.imageUrl,
+                views.productName to product.name
+            )
+        )
+
         val action = ProductsFragmentDirections.actionProductsFragmentToDetailFragment()
-        findNavController().navigate(action)
+        findNavController().navigate(action, extras)
     }
 }

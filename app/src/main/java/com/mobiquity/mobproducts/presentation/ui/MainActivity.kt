@@ -2,19 +2,24 @@ package com.mobiquity.mobproducts.presentation.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.lifecycle.Observer
-import com.mobiquity.mobproducts.ProductsApplicaton
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.mobiquity.mobproducts.R
-import com.mobiquity.mobproducts.presentation.viewmodel.BaseViewModel
-import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
-import dagger.android.AndroidInjection
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+    private val navController by lazy { findNavController(R.id.nav_host_fragment) }
+    private val appBarConfiguration by lazy { AppBarConfiguration(navController.graph) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
 }
