@@ -33,7 +33,9 @@ class ProductsViewModel(private val useCase: ProductsUseCase) :
                     Schedulers.io()
                 ).observeOn(
                     AndroidSchedulers.mainThread()
-                ).subscribe({
+                ).doOnSubscribe {
+                    setIsLoading(true)
+                }.subscribe({
                     productsLiveData.value = Result.success(it)
                     setIsLoading(false)
                 }, {
