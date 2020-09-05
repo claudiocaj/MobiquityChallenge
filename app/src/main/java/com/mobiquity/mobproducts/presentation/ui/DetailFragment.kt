@@ -2,6 +2,7 @@ package com.mobiquity.mobproducts.presentation.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionInflater
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,12 @@ class DetailFragment : Fragment() {
         AndroidSupportInjection.inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,19 +58,29 @@ class DetailFragment : Fragment() {
     }
 
     private fun bindProductData(product: Product) {
-        binding.productName.text = product.name
+        binding.productName.apply {
+            transitionName = product.name
+            text = product.name
+        }
+
         binding.price.text =
             product.saleDescription.amount.currencyFormat(product.saleDescription.currency)
 
-        Glide.with(requireContext())
-            .load(
-                BuildConfig.API_URL + product.imageUrl.subSequence(
-                    1,
-                    product.imageUrl.length
+        binding.productImg.apply {
+            transitionName = product.imageUrl
+
+            Glide.with(requireContext())
+                .load(
+                    BuildConfig.API_URL + product.imageUrl.subSequence(
+                        1,
+                        product.imageUrl.length
+                    )
                 )
-            ).placeholder(R.drawable.ic_loading)
-            .error(R.drawable.ic_no_photo)
-            .into(binding.productImg)
+                .error(R.drawable.ic_no_photo)
+                .into(this)
+
+        }
     }
 
 }
+

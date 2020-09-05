@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.FragmentProductsBinding
+import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Category
 import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.extensions.visible
@@ -106,9 +108,8 @@ class ProductsFragment : Fragment() {
     }
 
     private fun setUpProductList() {
-        productAdapter = ProductItemAdapter { product, binding ->
-            viewModel.setChosenProduct(product)
-            goToProductsDetail()
+        productAdapter = ProductItemAdapter { product, transitionViews ->
+            goToProductsDetail(product, transitionViews)
         }
 
         binding.productList.apply {
@@ -138,11 +139,18 @@ class ProductsFragment : Fragment() {
         binding.progressLoading.visible(isLoading)
     }
 
-    private fun goToProductsDetail() {
-        /* val extras = FragmentNavigatorExtras(
-             binding.productImg to "product transition"
-         )*/
+    private fun goToProductsDetail(product: Product, views: ItemProductBinding) {
+        viewModel.setChosenProduct(product)
+
+        views.productImg.transitionName = product.imageUrl
+        views.productName.transitionName = product.name
+
+        val extras = FragmentNavigatorExtras(
+            *arrayOf(views.productImg to product.imageUrl,
+                views.productName to product.name)
+        )
+
         val action = ProductsFragmentDirections.actionProductsFragmentToDetailFragment()
-        findNavController().navigate(action)
+        findNavController().navigate(action, extras)
     }
 }
