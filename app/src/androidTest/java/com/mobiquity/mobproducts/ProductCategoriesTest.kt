@@ -2,6 +2,7 @@ package com.mobiquity.mobproducts
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
@@ -12,13 +13,12 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.google.android.material.tabs.TabLayout
+import com.mobiquity.mobproducts.di.FakeRepositoryModule
 import com.mobiquity.mobproducts.domain.ProductsRepository
 import com.mobiquity.mobproducts.helper.RecyclerViewMatcher
 import com.mobiquity.mobproducts.helper.TestInjector
-import com.mobiquity.mobproducts.di.FakeRepositoryModule
 import com.mobiquity.mobproducts.presentation.ui.MainActivity
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -26,20 +26,15 @@ import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Observable
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class ProductCategoriesTest {
 
     @MockK
     private lateinit var productUserRepository: ProductsRepository
-
-    @get:Rule
-    val testRule: ActivityTestRule<MainActivity> =
-        ActivityTestRule(MainActivity::class.java, false, false)
 
     @Before
     fun setup() {
@@ -49,16 +44,20 @@ class ProductCategoriesTest {
     @Test
     fun testShowingCorrectProductItems() {
         TestInjector(FakeRepositoryModule()).inject()
-        testRule.launchActivity(null)
+        val activityScenario: ActivityScenario<MainActivity> =
+            ActivityScenario.launch(MainActivity::class.java)
 
         checkNameOnPosition(0, "Product1")
         checkNameOnPosition(1, "Product2")
+
+        activityScenario.close()
     }
 
     @Test
     fun testOpenProductDetailOnClick() {
         TestInjector(FakeRepositoryModule()).inject()
-        testRule.launchActivity(null)
+        val activityScenario: ActivityScenario<MainActivity> =
+            ActivityScenario.launch(MainActivity::class.java)
 
         onView(withId(R.id.product_list))
             .perform(
@@ -70,6 +69,8 @@ class ProductCategoriesTest {
 
         onView(withId(R.id.product_detail_name)).check(matches(isDisplayed()))
         onView(withId(R.id.product_detail_name)).check(matches(withText("Product1")))
+
+        activityScenario.close()
     }
 
     @Test
@@ -77,10 +78,13 @@ class ProductCategoriesTest {
         every { productUserRepository.getProducts() } returns Observable.error(IOException())
 
         TestInjector(FakeRepositoryModule(productUserRepository)).inject()
-        testRule.launchActivity(null)
+        val activityScenario: ActivityScenario<MainActivity> =
+            ActivityScenario.launch(MainActivity::class.java)
 
         onView(withId(com.google.android.material.R.id.snackbar_text))
             .check(matches(withText(R.string.error)))
+
+        activityScenario.close()
     }
 
     @Test
@@ -88,30 +92,39 @@ class ProductCategoriesTest {
         every { productUserRepository.getProducts() } returns Observable.create {}
 
         TestInjector(FakeRepositoryModule(productUserRepository)).inject()
-        testRule.launchActivity(null)
+        val activityScenario: ActivityScenario<MainActivity> =
+            ActivityScenario.launch(MainActivity::class.java)
 
         onView(withId(R.id.progress_loading)).check(matches(isDisplayed()))
+        activityScenario.close()
     }
 
     @Test
     fun testChangeTabLayout() {
         TestInjector(FakeRepositoryModule()).inject()
-        testRule.launchActivity(null)
+        val activityScenario: ActivityScenario<MainActivity> =
+            ActivityScenario.launch(MainActivity::class.java)
 
         checkNameOnPosition(0, "Product1")
         onView(withId(R.id.categories_tab)).perform(selectTabAtPosition(1))
         checkNameOnPosition(0, "Product3")
+
+        activityScenario.close()
     }
 
     @Test
     fun testEmptyProducts() {
+
         every { productUserRepository.getProducts() } returns Observable.just(listOf())
 
         TestInjector(FakeRepositoryModule(productUserRepository)).inject()
-        testRule.launchActivity(null)
+        val activityScenario: ActivityScenario<MainActivity> =
+            ActivityScenario.launch(MainActivity::class.java)
 
         onView(withId(R.id.no_products_img)).check(matches(isDisplayed()))
         onView(withId(R.id.no_products_txt)).check(matches(isDisplayed()))
+
+        activityScenario.close()
     }
 
     private fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {
