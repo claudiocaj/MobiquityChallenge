@@ -48,10 +48,11 @@ class DetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders
-            .of(requireActivity(), factory)
-            .get(ProductsViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), factory).get(ProductsViewModel::class.java)
+        subscribeUi()
+    }
 
+    private fun subscribeUi() {
         viewModel.getChosenProduct().observe(viewLifecycleOwner, Observer { product ->
             bindProductData(product)
         })

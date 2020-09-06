@@ -58,13 +58,35 @@ class ProductsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders
-            .of(requireActivity(), factory)
-            .get(ProductsViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), factory).get(ProductsViewModel::class.java)
 
         setUpProductList()
         subscribeUi()
+
         viewModel.fetchProducts()
+    }
+
+    private fun setUpProductList() {
+        productAdapter = ProductItemAdapter { product, transitionViews ->
+            goToProductsDetail(product, transitionViews)
+        }
+
+        binding.productList.apply {
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    LinearLayoutManager.VERTICAL
+                )
+            )
+
+            adapter = productAdapter
+        }
     }
 
     private fun subscribeUi() {
@@ -114,30 +136,6 @@ class ProductsFragment : Fragment() {
         })
         bindCategoryProductList(categories[0].products)
     }
-
-    private fun setUpProductList() {
-        productAdapter = ProductItemAdapter { product, transitionViews ->
-            goToProductsDetail(product, transitionViews)
-        }
-
-        binding.productList.apply {
-            layoutManager = LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.VERTICAL,
-                false
-            )
-
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    LinearLayoutManager.VERTICAL
-                )
-            )
-
-            adapter = productAdapter
-        }
-    }
-
 
     private fun bindCategoryProductList(products: List<Product>) {
         productAdapter.setProductsItems(products)
