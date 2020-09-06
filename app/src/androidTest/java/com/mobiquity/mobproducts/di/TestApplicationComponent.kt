@@ -1,9 +1,6 @@
-package com.mobiquity.mobproducts.mockedApi
+package com.mobiquity.mobproducts.di
 
-import com.mobiquity.mobproducts.ProductCategoriesTest
 import com.mobiquity.mobproducts.ProductsApplicaton
-import com.mobiquity.mobproducts.di.*
-import com.mobiquity.mobproducts.helper.TestApplication
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector

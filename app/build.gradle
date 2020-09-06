@@ -40,8 +40,9 @@ android {
     buildFeatures {
         viewBinding true
     }
-    packagingOptions {
-        pickFirst 'mockito-extensions/org.mockito.plugins.MockMaker'
+
+    testOptions {
+        animationsDisabled = true
     }
 }
 

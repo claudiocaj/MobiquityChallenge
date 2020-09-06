@@ -18,7 +18,7 @@ import com.google.android.material.tabs.TabLayout
 import com.mobiquity.mobproducts.domain.ProductsRepository
 import com.mobiquity.mobproducts.helper.RecyclerViewMatcher
 import com.mobiquity.mobproducts.helper.TestInjector
-import com.mobiquity.mobproducts.mockedApi.FakeRepositoryModule
+import com.mobiquity.mobproducts.di.FakeRepositoryModule
 import com.mobiquity.mobproducts.presentation.ui.MainActivity
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -44,18 +44,20 @@ class ProductCategoriesTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        TestInjector(FakeRepositoryModule()).inject()
     }
 
     @Test
     fun testShowingCorrectProductItems() {
+        TestInjector(FakeRepositoryModule()).inject()
         testRule.launchActivity(null)
+
         checkNameOnPosition(0, "Product1")
         checkNameOnPosition(1, "Product2")
     }
 
     @Test
     fun testOpenProductDetailOnClick() {
+        TestInjector(FakeRepositoryModule()).inject()
         testRule.launchActivity(null)
 
         onView(withId(R.id.product_list))
@@ -66,7 +68,6 @@ class ProductCategoriesTest {
                 )
             )
 
-        Thread.sleep(500)
         onView(withId(R.id.product_detail_name)).check(matches(isDisplayed()))
         onView(withId(R.id.product_detail_name)).check(matches(withText("Product1")))
     }
@@ -74,6 +75,7 @@ class ProductCategoriesTest {
     @Test
     fun testFetchProductError() {
         every { productUserRepository.getProducts() } returns Observable.error(IOException())
+
         TestInjector(FakeRepositoryModule(productUserRepository)).inject()
         testRule.launchActivity(null)
 
@@ -84,14 +86,17 @@ class ProductCategoriesTest {
     @Test
     fun testProgressBarWhileLoading() {
         every { productUserRepository.getProducts() } returns Observable.create {}
+
         TestInjector(FakeRepositoryModule(productUserRepository)).inject()
         testRule.launchActivity(null)
+
         onView(withId(R.id.progress_loading)).check(matches(isDisplayed()))
     }
 
     @Test
     fun testChangeTabLayout() {
         testRule.launchActivity(null)
+
         checkNameOnPosition(0, "Product1")
         onView(withId(R.id.categories_tab)).perform(selectTabAtPosition(1))
         checkNameOnPosition(0, "Product3")

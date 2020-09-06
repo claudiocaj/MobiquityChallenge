@@ -1,4 +1,4 @@
-package com.mobiquity.mobproducts.mockedApi
+package com.mobiquity.mobproducts.di
 
 import com.mobiquity.mobproducts.domain.ProductsRepository
 import dagger.Module
