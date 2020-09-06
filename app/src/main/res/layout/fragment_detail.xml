@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/product_name"
+        android:id="@+id/product_detail_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/medium_margin"
@@ -38,9 +38,9 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:transitionName="@string/product_name_transition"
-        app:layout_constraintBottom_toBottomOf="@id/product_name"
+        app:layout_constraintBottom_toBottomOf="@id/product_detail_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/product_name"
+        app:layout_constraintTop_toTopOf="@id/product_detail_name"
         tools:text="R$250" />
 
 

@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
-open class RepositoryModule {
+class RepositoryModule {
     @Provides
     @Singleton
     fun provideProductsRepository(productService: ProductsService): ProductsRepository =

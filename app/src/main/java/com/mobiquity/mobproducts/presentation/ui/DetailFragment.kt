@@ -58,7 +58,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun bindProductData(product: Product) {
-        binding.productName.apply {
+        binding.productDetailName.apply {
             transitionName = product.name
             text = product.name
         }
