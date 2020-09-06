@@ -95,11 +95,23 @@ class ProductCategoriesTest {
 
     @Test
     fun testChangeTabLayout() {
+        TestInjector(FakeRepositoryModule()).inject()
         testRule.launchActivity(null)
 
         checkNameOnPosition(0, "Product1")
         onView(withId(R.id.categories_tab)).perform(selectTabAtPosition(1))
         checkNameOnPosition(0, "Product3")
+    }
+
+    @Test
+    fun testEmptyProducts() {
+        every { productUserRepository.getProducts() } returns Observable.just(listOf())
+
+        TestInjector(FakeRepositoryModule(productUserRepository)).inject()
+        testRule.launchActivity(null)
+
+        onView(withId(R.id.no_products_img)).check(matches(isDisplayed()))
+        onView(withId(R.id.no_products_txt)).check(matches(isDisplayed()))
     }
 
     private fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {

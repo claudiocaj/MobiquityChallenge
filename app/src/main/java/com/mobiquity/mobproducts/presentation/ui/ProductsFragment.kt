@@ -91,6 +91,7 @@ class ProductsFragment : Fragment() {
         val tabs = binding.categoriesTab
 
         tabs.removeAllTabs()
+        binding.noProductsGroup.visible(categories.isEmpty())
 
         for (category in categories) {
             tabs.addTab(tabs.newTab().apply {
