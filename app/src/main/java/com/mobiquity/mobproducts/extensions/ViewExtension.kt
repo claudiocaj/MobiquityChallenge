@@ -18,6 +18,7 @@ fun ImageView.load(imageAddress: String) {
         .load(imageAddress)
         .error(R.drawable.ic_no_photo)
         .placeholder(R.drawable.ic_loading)
+        .centerCrop()
         .into(this)
 }
 
@@ -25,5 +26,6 @@ fun ImageView.loadWithoutPlaceHolder(imageAddress: String) {
     Glide.with(this)
         .load(imageAddress)
         .error(R.drawable.ic_no_photo)
+        .centerCrop()
         .into(this)
 }
