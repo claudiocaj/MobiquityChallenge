@@ -3,7 +3,7 @@ package com.mobiquity.mobproducts.viewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.getOrAwaitValue
 import com.mobiquity.mobproducts.DummyConstants
-import com.mobiquity.mobproducts.RxImmediateSchedulerRule
+import com.mobiquity.mobproducts.helper.RxImmediateSchedulerRule
 import com.mobiquity.mobproducts.domain.entities.Category
 import com.mobiquity.mobproducts.domain.usecase.ProductsUseCase
 import com.mobiquity.mobproducts.presentation.viewmodel.ProductsViewModel
@@ -24,7 +24,8 @@ class ProductsViewModelTest {
 
     @Rule
     @JvmField
-    val rxImmediateSchedulerRule = RxImmediateSchedulerRule()
+    val rxImmediateSchedulerRule =
+        RxImmediateSchedulerRule()
 
     @Rule
     @JvmField

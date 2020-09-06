@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.mobiquity.mobproducts.databinding.FragmentDetailBinding
 import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.extensions.currencyFormat

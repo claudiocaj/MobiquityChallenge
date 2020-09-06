@@ -1,13 +1,9 @@
 package com.mobiquity.mobproducts.presentation.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mobiquity.mobproducts.BuildConfig
-import com.mobiquity.mobproducts.R
 import com.mobiquity.mobproducts.databinding.ItemProductBinding
 import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.extensions.getImageRequestFormat
