@@ -3,6 +3,7 @@ package com.mobiquity.mobproducts
 import android.app.Activity
 import android.app.Application
 import androidx.fragment.app.Fragment
+import com.mobiquity.mobproducts.di.AppComponent
 import com.mobiquity.mobproducts.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -21,8 +22,11 @@ class ProductsApplicaton : Application(), HasActivityInjector, HasSupportFragmen
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingFragmentInjector
 
+    lateinit var appComponent: AppComponent
+
     override fun onCreate() {
         super.onCreate()
-        DaggerAppComponent.builder().build().inject(this)
+        appComponent = DaggerAppComponent.builder().build()
+        appComponent.inject(this)
     }
 }

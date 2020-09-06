@@ -7,7 +7,6 @@ import com.mobiquity.mobproducts.domain.entities.Product
 import com.mobiquity.mobproducts.domain.usecase.ProductsUseCase
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
 
 class ProductsViewModel(private val useCase: ProductsUseCase) :
     BaseViewModel() {
