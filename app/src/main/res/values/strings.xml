@@ -7,5 +7,5 @@
     <string name="products_label">Products</string>
     <string name="product_detail_label">Product detail</string>
     <string name="error">An error occurred</string>
-    <string name="no_products">Sorry, no products.</string>
+    <string name="no_products">Sorry, no products :(</string>
 </resources>

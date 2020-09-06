@@ -31,7 +31,7 @@ class ProductsFragment : Fragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
-    lateinit var viewModel: ProductsViewModel
+    private lateinit var viewModel: ProductsViewModel
     private lateinit var binding: FragmentProductsBinding
     private lateinit var productAdapter: ProductItemAdapter
 

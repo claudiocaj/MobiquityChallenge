@@ -22,7 +22,7 @@ class DetailFragment : Fragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
-    lateinit var viewModel: ProductsViewModel
+    private lateinit var viewModel: ProductsViewModel
     private lateinit var binding: FragmentDetailBinding
 
     override fun onAttach(context: Context) {
