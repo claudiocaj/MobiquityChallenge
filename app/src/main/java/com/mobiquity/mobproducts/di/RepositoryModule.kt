@@ -5,7 +5,6 @@ import com.mobiquity.mobproducts.data.ProductsService
 import com.mobiquity.mobproducts.domain.ProductsRepository
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module

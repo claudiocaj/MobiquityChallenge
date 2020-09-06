@@ -1,7 +1,5 @@
 package com.mobiquity.mobproducts.di
 
-import android.app.Application
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.MapKey
@@ -10,7 +8,6 @@ import dagger.Provides
 import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.reflect.KClass
-
 
 /* Key used to associate ViewModel types with providers */
 @MapKey
