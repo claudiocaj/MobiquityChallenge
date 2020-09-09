@@ -11,32 +11,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 
-@Module(
-    includes = [
-        ViewModelModule.ProvideViewModel::class
-    ]
-)
-abstract class ViewModelModule {
-
-    @Module
-    class InjectViewModel() {
-
-        @Provides
-        fun productsViewModel(
-            factory: ViewModelProvider.Factory,
-            target: MainActivity
-        ): ProductsViewModel =
-            ViewModelProviders.of(target, factory).get(ProductsViewModel::class.java)
-    }
-
-
-    @Module
-    class ProvideViewModel {
-        @Provides
-        @IntoMap
-        @ViewModelKey(BaseViewModel::class)
-        fun productViewModel(useCase: ProductsUseCase): ViewModel = ProductsViewModel(useCase)
-    }
-
-
+@Module
+class ViewModelModule {
+    @Provides
+    @IntoMap
+    @ViewModelKey(BaseViewModel::class)
+    fun productViewModel(useCase: ProductsUseCase): ViewModel = ProductsViewModel(useCase)
 }
+
+
